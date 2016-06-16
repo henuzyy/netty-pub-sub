@@ -1,4 +1,6 @@
 import codec.MessageCodec;
+import handler.ExceptionHandler;
+import handler.HeatBeatHandler;
 import handler.SubHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
@@ -8,6 +10,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
+import io.netty.handler.timeout.IdleStateHandler;
 import org.apache.log4j.Logger;
 
 /**
@@ -42,8 +45,11 @@ public class SubClient {
                         pipeline.addLast(new ObjectDecoder(1024*1024,
                                 ClassResolvers.weakCachingConcurrentResolver(this.getClass().getClassLoader())));
                         pipeline.addLast(new ObjectEncoder());
-//                        pipeline.addLast(new MessageCodec());
-                        pipeline.addLast(new SubHandler(topic));
+//                        pipeline.addLast("codec",new MessageCodec());
+                        pipeline.addLast("IdleState",new IdleStateHandler(30,0,0));   //心跳检测handler
+                        pipeline.addLast("subscription",new SubHandler(topic));
+                        pipeline.addLast("Exception",new ExceptionHandler());
+                        pipeline.addLast("heatDetect",new HeatBeatHandler());
                     }
                 });
         try {

@@ -17,7 +17,12 @@ public class PubService implements Service {
 
 
     public void execute(Channel ch, Protocol protocol) throws Exception {
+        System.out.println( ServiceApplication.channelGroup.size());
         if (protocol != null) {
+            protocol.setCMD((short) 3);
+            ServiceApplication.channelGroup.writeAndFlush(protocol);
+        }
+/*        if (protocol != null) {
             // arr[0] topic ; arr[1] msg;
             String[] arr = new String(protocol.getMsg()).split(StringUtil.getLineDelimiter());
             if (arr == null || arr.length != 2)
@@ -31,7 +36,7 @@ public class PubService implements Service {
                     channelGroup.writeAndFlush(proto); //需要发布的消息
                 }
             }
-        }
+        }*/
     }
 
     public int getCMD() {

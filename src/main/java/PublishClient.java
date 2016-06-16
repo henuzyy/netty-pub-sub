@@ -1,4 +1,5 @@
 import codec.MessageCodec;
+import handler.ExceptionHandler;
 import handler.ServerHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
@@ -8,6 +9,8 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
+import io.netty.handler.timeout.IdleStateHandler;
+import io.netty.handler.timeout.ReadTimeoutHandler;
 import org.apache.log4j.Logger;
 import service.ServiceApplication;
 
@@ -15,7 +18,7 @@ import service.ServiceApplication;
  * 发布订阅的服务
  * Created by zyy on 2016/6/12.
  */
-public class Server {
+public class PublishClient {
 
     private Logger logger = Logger.getLogger(this.getClass());
 
@@ -26,14 +29,14 @@ public class Server {
 
     private static boolean isOpen = false;  //是否开启
 
-    private Server() {
+    private PublishClient() {
     }
 
     private static class ServerHolder {
-        private final static Server INSTANCE = new Server();
+        private final static PublishClient INSTANCE = new PublishClient();
     }
 
-    public static final Server getInstance() {
+    public static final PublishClient getInstance() {
         return ServerHolder.INSTANCE;
     }
 
@@ -56,14 +59,16 @@ public class Server {
                         pipeline.addLast(new ObjectDecoder(1024*1024,
                                 ClassResolvers.weakCachingConcurrentResolver(this.getClass().getClassLoader())));
                         pipeline.addLast(new ObjectEncoder());
-//                        pipeline.addLast(new MessageCodec());
-                        pipeline.addLast(new ServerHandler());
+//                        pipeline.addLast("codec",new MessageCodec());
+                        pipeline.addLast("readTimeout",new ReadTimeoutHandler(30));
+                        pipeline.addLast("Exception",new ExceptionHandler());
+                        pipeline.addLast("service",new ServerHandler());
                     }
                 });
         try {
             ChannelFuture future = bootstrap.bind(9997).sync(); //绑定9997端口
             isOpen = true;
-            logger.info("服务已经启动！");
+            logger.info("发布程序已经启动！");
             future.channel().closeFuture().sync();
         } catch (InterruptedException e) {
             logger.error("bind error", e);
@@ -84,7 +89,7 @@ public class Server {
 
     public static void main(String[] args) {
         ServiceApplication.initial();  //初始化application
-        Server server = Server.getInstance();
+        PublishClient server = PublishClient.getInstance();
         server.start();
 
 

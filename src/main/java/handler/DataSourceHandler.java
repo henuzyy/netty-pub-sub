@@ -9,9 +9,9 @@ import util.StringUtil;
 /**
  * Created by zyy on 2016/6/12.
  */
-public class PubHandler extends ChannelInboundHandlerAdapter {
+public class DataSourceHandler extends ChannelInboundHandlerAdapter {
 
-    private Logger logger = Logger.getLogger(PubHandler.class);
+    private Logger logger = Logger.getLogger(DataSourceHandler.class);
 
     private String topic;
 
@@ -22,7 +22,10 @@ public class PubHandler extends ChannelInboundHandlerAdapter {
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         //向某个topic 发布某条消息
         Protocol protocol = new Protocol();
+
+
         protocol.setCMD((short) 1);
+        while(true)
         for (int i = 0; i < 10; i++) {
             String msg = this.topic+ StringUtil.getLineDelimiter() + this.topicMsg +i;
             logger.info("要发送的消息内容为：" + msg);
@@ -34,10 +37,10 @@ public class PubHandler extends ChannelInboundHandlerAdapter {
 
     }
 
-    public PubHandler() {
+    public DataSourceHandler() {
     }
 
-    public PubHandler(String topic, String topicMsg) {
+    public DataSourceHandler(String topic, String topicMsg) {
         this.topic = topic;
         this.topicMsg = topicMsg;
     }

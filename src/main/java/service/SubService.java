@@ -23,6 +23,10 @@ public class SubService implements Service {
 
     public void execute(Channel ch, Protocol protocol) throws Exception {
         if (protocol != null) {
+            ServiceApplication.channelGroup.add(ch);
+        }
+
+/*        if (protocol != null) {
             // topic topic
             String topic = new String(protocol.getMsg());
             if (topic == null || topic.length() <= 0)
@@ -40,7 +44,7 @@ public class SubService implements Service {
         Set<Map.Entry<String, ChannelGroup>> sets = ServiceApplication.subTopicMap.entrySet();
         for (Map.Entry<String, ChannelGroup> item : sets) {
             logger.info(String.format("topic: %s   ;   sub this topic userSize=%s", item.getKey(), item.getValue().size()));
-        }
+        }*/
 
     }
 
