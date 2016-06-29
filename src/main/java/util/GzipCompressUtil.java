@@ -7,6 +7,7 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 /**
+ * GZIP压缩工具类
  * Created by zyy on 2016/6/17.
  */
 public class GzipCompressUtil {
@@ -14,7 +15,7 @@ public class GzipCompressUtil {
     /**
      * Gzip压缩
      */
-    public static byte[] gzip(byte[] sourceBytes) {
+    public  static byte[] gzip(byte[] sourceBytes) {
         if (sourceBytes == null || sourceBytes.length <= 0) {
             return null;
         }
@@ -51,8 +52,8 @@ public class GzipCompressUtil {
 
     /**
      * Gzip解压缩
-     * */
-    public static byte[] gunzip(byte[] sourceBytes) {
+     */
+    public  static byte[] gunzip(byte[] sourceBytes) {
         if (sourceBytes == null || sourceBytes.length <= 0) {
             return null;
         }
@@ -74,19 +75,19 @@ public class GzipCompressUtil {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if(bos!=null){
+            if (bos != null) {
                 try {
                     bos.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 } finally {
-                    if(gzipis!=null){
+                    if (gzipis != null) {
                         try {
                             gzipis.close();
                         } catch (IOException e) {
                             e.printStackTrace();
                         } finally {
-                            if(bio!=null){
+                            if (bio != null) {
                                 try {
                                     bio.close();
                                 } catch (IOException e) {
